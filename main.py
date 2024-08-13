@@ -1,4 +1,5 @@
 import mysql.connector
+import matplotlib.pyplot as plt
 
 config = {
     'user' : 'root',
@@ -12,12 +13,28 @@ cnx = mysql.connector.connect(**config)
 
 cursor = cnx.cursor()
 
-query = ("SELECT * from cotahist where id<100")
+query = """
+    SELECT 
+        DTPREGAO,
+        VLEXTRINSECO
+    FROM
+        COTAHIST
+    WHERE
+        CODNEG = 'PETRH298'
+    ORDER BY
+        DTPREGAO"""
 
 cursor.execute(query)
 
 result = cursor.fetchall()
 
-print(result)
+data=[]
+dates=[]
+for row in result:
+    data.append(row[1])
+    dates.append(row[0])
+
+plt.plot(dates,data)
+plt.show()
 
 cnx.close()
