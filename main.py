@@ -15,12 +15,16 @@ cursor = cnx.cursor()
 
 query = """
     SELECT 
-        DTPREGAO,
+        CODNEG,
+        DTPREGAO,        
         VLEXTRINSECO
     FROM
         COTAHIST
     WHERE
-        CODNEG = 'PETRH298'
+        CODNEG in (
+            'PETRG311',
+            'PETRG319'
+        )
     ORDER BY
         DTPREGAO"""
 
@@ -28,13 +32,24 @@ cursor.execute(query)
 
 result = cursor.fetchall()
 
-data=[]
-dates=[]
+data={
+    "PETRG311":{
+        "x":[],
+        "y":[]
+    },
+    "PETRG319":{
+        "x":[],
+        "y":[]
+    }
+}
+#print(data)
 for row in result:
-    data.append(row[1])
-    dates.append(row[0])
-
-plt.plot(dates,data)
+    #print(row[0],data[row[0]])
+    data[row[0]]["x"].append(row[1])
+    data[row[0]]["y"].append(row[2])
+#print(data)
+#print(dates)
+plt.plot(data["PETRG311"]["x"],data["PETRG311"]["y"],data["PETRG319"]["x"],data["PETRG319"]["y"])
 plt.show()
 
 cnx.close()
